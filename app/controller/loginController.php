@@ -9,26 +9,34 @@ class loginController extends htmlController {
 
 
     
-    public function index(){
-
-       echo $this->render("login.php", ['titulo' => 'Tela de Login']);
+    public function index($log = true){
+        if($log){
+            echo $this->render("login.php", ['titulo' => 'Tela de Login',
+            'error-login' => '']);
+        } else {
+            echo $this->render("login.php", ['titulo' => 'Tela de Login',
+                                    'error-login' => 'usuario não encontrado']);
+        }
     }
+
+    
 
 
     // recuperar valores do formulario de login e verifica se existe no banco de dados atraves da model
     // retorno type boolean
     public function recuperarValores(){
-        if(!empty($_POST['form-login'])){
+        if(!isset($_POST['form-login'])){
             $formValues = [            
                 "Senha" => $_POST['txtSenha'],
                 "email" => $_POST['txtEmail']
             ];
-
-            return Usuario::verificaUsuario($_POST['txtSenha'], $_POST['txtEmail']);
+            $log = Usuario::verificaUsuario($formValues["email"], $formValues["Senha"]);
+            loginController::index($log);
         }
         
 
     }
+ 
 }
 
 
